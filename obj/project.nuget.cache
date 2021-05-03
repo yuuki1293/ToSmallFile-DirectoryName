@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "WjkXlHDQe+wk5mgzFvqhTz9Bf/fzo1kHfks15lLlnITGMHkY8aA2D7jywh8RMwNJ1albks0eA9ebuwyyaoHykA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\i2011430\\OneDrive - 独立行政法人 国立高等専門学校機構\\ドキュメント\\application\\F#\\フォルダ下を小文字に\\フォルダ下を小文字に.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\i2011430\\.nuget\\packages\\fsharp.core\\5.0.0\\fsharp.core.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
