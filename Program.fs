@@ -4,33 +4,37 @@ open System
 open System.IO
 open System.Linq
 
-let targetPath = Console.ReadLine()
-
-let ToAbsolutelyPath relativePath = Path.Combine(targetPath, relativePath)
+let ToAbsolutelyPath parent relativePath = Path.Combine(parent, relativePath)
 
 let ToRelativePath (absolutelyPath: string) =
-    let parentPathLength = targetPath.Length
-
     match absolutelyPath |> File.GetAttributes with
-    | _ when Directory.Exists absolutelyPath -> Path.GetDirectoryName absolutelyPath
+    | _ when Directory.Exists absolutelyPath -> absolutelyPath
     | _ -> Path.GetFileName absolutelyPath
 
-let ToSmallPath (path: string) =
-    let relativePath = path |> ToRelativePath
-    let newPath = relativePath.ToLower()
-    let newAbsolutelyPath = ToAbsolutelyPath newPath
-    newAbsolutelyPath
+let ToSmallPath (path: string) parent =
+    let a =
+        (path |> ToRelativePath).ToLower()
+        |> ToAbsolutelyPath parent
 
-let ToSmallFileAndDirectory path =
-    match path |> File.GetAttributes with
-    | _ when Directory.Exists path -> Directory.Move(path, ToSmallPath path)
-    | _ -> File.Move(path, ToSmallPath path)
+    a
 
-let Main () =
-    let files = Directory.GetFiles(targetPath)
+let ToSmallFileAndDirectory parent path =
+    try
+        match path |> File.GetAttributes with
+        | _ when Directory.Exists path -> Directory.Move(path, ToSmallPath path parent)
+        | _ -> File.Move(path, ToSmallPath path parent)
+    with :? IOException -> ()
+
+let rec Main parent =
+    let files = Directory.GetFiles(parent)
 
     for file in files do
-        file |> ToSmallFileAndDirectory
+        file |> ToSmallFileAndDirectory parent
 
-Main() |> ignore
-ignore (Console.ReadKey())
+    let dirs = Directory.GetDirectories(parent)
+
+    for dir in dirs do
+        dir |> ToSmallFileAndDirectory parent
+        Main dir
+
+Main(Console.ReadLine()) |> ignore

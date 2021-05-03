@@ -19,6 +19,18 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$msCompile"
-        }
+        },
+        {
+            "label": "build Release",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/フォルダ下を小文字に.fsproj",
+                "-c",
+                "Release"
+            ],
+            "problemMatcher": "$msCompile"
+        }   
     ]
 }
