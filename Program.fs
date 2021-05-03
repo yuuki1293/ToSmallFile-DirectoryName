@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+open System.Linq
 
 let targetPath = Console.ReadLine()
 
@@ -10,10 +11,9 @@ let ToAbsolutelyPath relativePath = Path.Combine(targetPath, relativePath)
 let ToRelativePath (absolutelyPath: string) =
     let parentPathLength = targetPath.Length
 
-    let relativePath =
-        absolutelyPath.[(parentPathLength + 1)..(absolutelyPath.Length - 1)]
-
-    relativePath
+    match absolutelyPath |> File.GetAttributes with
+    | _ when Directory.Exists absolutelyPath -> Path.GetDirectoryName absolutelyPath
+    | _ -> Path.GetFileName absolutelyPath
 
 let ToSmallPath (path: string) =
     let relativePath = path |> ToRelativePath
@@ -26,5 +26,11 @@ let ToSmallFileAndDirectory path =
     | _ when Directory.Exists path -> Directory.Move(path, ToSmallPath path)
     | _ -> File.Move(path, ToSmallPath path)
 
-ToSmallFileAndDirectory(Console.ReadLine())
+let Main () =
+    let files = Directory.GetFiles(targetPath)
+
+    for file in files do
+        file |> ToSmallFileAndDirectory
+
+Main() |> ignore
 ignore (Console.ReadKey())
