@@ -23,7 +23,8 @@ let ToSmallPath (path: string) =
 
 let ToSmallFileAndDirectory path =
     match path |> File.GetAttributes with
-    | FileAttributes.Directory -> Directory.Move(path, ToSmallPath path)
+    | _ when Directory.Exists path -> Directory.Move(path, ToSmallPath path)
     | _ -> File.Move(path, ToSmallPath path)
 
+ToSmallFileAndDirectory(Console.ReadLine())
 ignore (Console.ReadKey())
