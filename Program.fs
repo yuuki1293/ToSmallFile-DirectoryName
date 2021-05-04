@@ -1,22 +1,18 @@
-// Learn more about F# at http://docs.microsoft.com/dotnet/fsharp
-
 open System
 open System.IO
-open System.Linq
 
 let ToAbsolutelyPath parent relativePath = Path.Combine(parent, relativePath)
 
-let ToRelativePath (absolutelyPath: string) =
-    match absolutelyPath |> File.GetAttributes with
-    | _ when Directory.Exists absolutelyPath -> absolutelyPath
-    | _ -> Path.GetFileName absolutelyPath
+let ToRelativePath (absolutelyPath: string) = Path.GetFileName absolutelyPath
 
 let ToSmallPath (path: string) parent =
-    let a =
-        (path |> ToRelativePath).ToLower()
-        |> ToAbsolutelyPath parent
+    let large = (path |> ToRelativePath)
+    let small = large.ToLower()
 
-    a
+    if not (large.Equals(small)) then
+        printfn "%s -> %s" large small
+
+    small |> ToAbsolutelyPath parent
 
 let ToSmallFileAndDirectory parent path =
     try
